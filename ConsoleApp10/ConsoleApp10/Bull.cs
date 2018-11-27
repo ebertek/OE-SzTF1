@@ -5,7 +5,7 @@ namespace ConsoleApp10
     class Bull
     {
         private static Random rnd = new Random();
-        public bool Alive { get; private set; } = true; // ugyanaz, mintha a konstruktorokban tennénk igazzá
+        public bool Alive { get; set; } = true; // ugyanaz, mintha a konstruktorokban tennénk igazzá
         public Coordinate Crd { get; private set; }
 
         public Bull()

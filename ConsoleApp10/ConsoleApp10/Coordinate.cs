@@ -27,6 +27,10 @@ namespace ConsoleApp10
         {
             return X == ((Coordinate)crd).X && Y == ((Coordinate)crd).Y;
         }
+        public override int GetHashCode()
+        {
+            return X ^ Y;
+        }
         public override string ToString()
         {
             return $"{{{X},{Y}}}";

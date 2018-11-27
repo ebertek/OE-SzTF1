@@ -59,9 +59,54 @@ namespace ConsoleApp10
         }
         public void ClosestBullFromGoal()
         {
+            double distance = int.MaxValue;
+            for (int i = 0; i < bulls.Length; i++)
+            {
+                double actDistance = bulls[i].Distance(Map.EndCrd);
+                if (bulls[i].Alive && actDistance < distance)
+                {
+                    distance = actDistance;
+                }
+            }
+            Console.WriteLine($"Closest bull from the goal ({Map.EndCrd}): {distance}");
         }
         public void DrawMap()
         {
+            string map = "  ";
+
+            for (int i = 0; i < Map.Width; i++)
+            {
+                map += i.ToString().PadLeft(2); // Oszlopok:  0 1 2 3 ...
+            }
+            map += Environment.NewLine;
+
+            for (int y = 0; y < Map.Width; y++)
+            {
+                map += y.ToString().PadLeft(2);
+                for (int x = 0; x < Map.Height; x++)
+                {
+                    char cell = '-';
+                    // string cell = "-";
+                    for (int i = 0; i < bulls.Length; i++)
+                    {
+                        if (bulls[i].Distance(new Coordinate(x, y)) == 0)
+                        {
+                            if (!bulls[i].Alive)
+                            {
+                                cell = '+'; // halott bölény
+                                // cell = "💀";
+                            } else if (GetGameState != GameState.OnGoing)
+                            {
+                                cell = 'o'; // élő bölény (csak akkor látszanak, ha már vége a játéknak)
+                                // cell = "🐮";
+                            }
+                        }
+                    }
+                    map += cell.ToString().PadLeft(2);
+                }
+                map += Environment.NewLine;
+            }
+            Console.WriteLine(map);
         }
         public void Move()
         {
@@ -75,6 +120,22 @@ namespace ConsoleApp10
         }
         public void Shoot(Coordinate shoot)
         {
+            if (shoot.X < 0 || shoot.Y < 0 || shoot.X >= Map.Width || shoot.Y >= Map.Height) // a Map statikus osztály, bárhonnan elérhetjük példányosítás nélkül
+            {
+                return; // ki is lépünk a metódusból
+            }
+
+            LastShootHit = 0;
+            for (int i = 0; i < bulls.Length; i++)
+            {
+                if (bulls[i].Alive && bulls[i].Distance(shoot) == 0)
+                {
+                    LastShootHit++;
+                    bulls[i].Alive = false;
+                }
+            }
+
+            NbrOfDeadBulls += LastShootHit;
         }
     }
 }
